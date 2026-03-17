@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-zinc-950 text-zinc-100 antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold leading-tight;
+  }
+
+  a {
+    @apply transition-colors;
+  }
+
+  /* Prose styles for article bodies */
+  .prose-dark {
+    @apply text-zinc-300;
+  }
+
+  .prose-dark h1, .prose-dark h2, .prose-dark h3 {
+    @apply text-zinc-100;
+  }
+
+  .prose-dark a {
+    @apply text-orange-400 hover:text-orange-300;
+  }
+
+  .prose-dark code {
+    @apply bg-zinc-800 text-zinc-200 px-1 rounded text-sm;
+  }
+
+  .prose-dark pre {
+    @apply bg-zinc-900 border border-zinc-700 rounded-lg p-4 overflow-x-auto;
+  }
+
+  .prose-dark blockquote {
+    @apply border-l-4 border-orange-500 pl-4 italic text-zinc-400;
+  }
+
+  .prose-dark table {
+    @apply w-full border-collapse;
+  }
+
+  .prose-dark th {
+    @apply text-left px-3 py-2 bg-zinc-800 text-zinc-300 text-sm font-semibold border-b border-zinc-700;
+  }
+
+  .prose-dark td {
+    @apply px-3 py-2 text-zinc-300 text-sm border-b border-zinc-800;
+  }
+
+  .prose-dark ul {
+    @apply list-disc list-inside space-y-1;
+  }
+
+  .prose-dark ol {
+    @apply list-decimal list-inside space-y-1;
+  }
+
+  .prose-dark strong {
+    @apply text-zinc-100 font-semibold;
+  }
+
+  .prose-dark hr {
+    @apply border-zinc-700;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
