@@ -32,6 +32,17 @@ class Config:
     FETCH_DELAY: float = 2.0  # polite delay between requests
     MAX_CANDIDATES_FOR_DEDUP: int = 20
 
+    # Auto-publish: detections from sources at or above this trust level
+    # are published immediately without manual review.
+    # Set to 6 to disable auto-publish (no source reaches 6).
+    AUTO_PUBLISH_MIN_TRUST_LEVEL: int = int(os.environ.get("AUTO_PUBLISH_MIN_TRUST_LEVEL", "5"))
+
+    # URL of the deployed Next.js web app — used to call the auto-publish API
+    WEB_APP_URL: str = os.environ.get("WEB_APP_URL", "")
+
+    # Admin secret — must match ADMIN_SECRET in the Next.js app
+    ADMIN_SECRET: str = os.environ.get("ADMIN_SECRET", "")
+
     # Logging
     LOG_LEVEL: str = os.environ.get("LOG_LEVEL", "INFO")
 

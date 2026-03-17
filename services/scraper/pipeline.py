@@ -15,6 +15,7 @@ from date_normalizer import normalize_dates
 from deduplicator import check_duplicate
 from enricher import enrich_product
 from social_poster import post_preorder_alert, post_rumor_alert
+from auto_publisher import maybe_auto_publish
 
 
 @dataclass
@@ -154,19 +155,33 @@ async def run_for_monitor(monitor: dict) -> PipelineResult:
             result.errors.append(error_msg)
 
     # ── Step 9: Write enriched data back to detection ─────────────────────────
-    status = "duplicate" if all(
+    all_skipped = all(
         e.get("deduplication", {}).get("recommended_action") == "skip"
         for e in enriched_products
-    ) else "extracted"
+    )
+    status = "duplicate" if all_skipped else "extracted"
 
     db.update_detection(detection_id, {
         "processing_status": status,
         "extracted_json": {
             "products": enriched_products,
+            "product": enriched_products[0] if enriched_products else {},
+            "classification": enriched_products[0] if enriched_products else {},
             "source_trust_level": trust_level,
             "source_type": source_type,
         },
     })
+
+    # ── Step 10: Auto-publish if trust threshold is met ───────────────────────
+    if not all_skipped and detection_id:
+        auto_published = await maybe_auto_publish(detection_id, trust_level)
+        if auto_published:
+            result.detections_created = len(enriched_products)
+        else:
+            logger.info(
+                f"Detection {detection_id} placed in review queue "
+                f"(trust level {trust_level})"
+            )
 
     return result
 
