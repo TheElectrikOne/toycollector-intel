@@ -1,8 +1,7 @@
-"""Claude API classification of toy product records."""
+"""Kimi API classification of toy product records."""
 
 import json
-from typing import Optional
-import anthropic
+from openai import OpenAI
 from config import config
 from loguru import logger
 from extractor import _parse_json
@@ -29,10 +28,10 @@ Rules:
 
 def classify_product(product: dict, trust_level: int, source_type: str) -> dict:
     """
-    Use Claude to classify a toy product record.
+    Use Kimi to classify a toy product record.
     Returns classification dict.
     """
-    client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+    client = OpenAI(api_key=config.KIMI_API_KEY, base_url=config.KIMI_BASE_URL)
 
     prompt = f"""INPUT:
 {json.dumps(product, indent=2)}
@@ -41,15 +40,17 @@ Source trust level: {trust_level}
 Source type: {source_type}"""
 
     try:
-        response = client.messages.create(
+        response = client.chat.completions.create(
             model=config.CLASSIFICATION_MODEL,
             max_tokens=1024,
             temperature=0,
-            system=CLASSIFICATION_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "system", "content": CLASSIFICATION_SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ],
         )
 
-        text = response.content[0].text
+        text = response.choices[0].message.content or ""
         return _parse_json(text)
 
     except Exception as e:

@@ -1,8 +1,7 @@
-"""Claude API extraction calls — pulls structured product data from raw HTML."""
+"""Kimi API extraction calls — pulls structured product data from raw HTML."""
 
 import json
-from typing import Optional
-import anthropic
+from openai import OpenAI
 from config import config
 from loguru import logger
 
@@ -33,30 +32,31 @@ For each product found, return:
 If a field is not present on the page, return null. Do not guess. If a date is ambiguous (e.g., "Fall 2025"), capture it in release_window and leave release_date null. Return an array of product objects."""
 
 
-def get_client() -> anthropic.Anthropic:
-    return anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+def get_client() -> OpenAI:
+    return OpenAI(api_key=config.KIMI_API_KEY, base_url=config.KIMI_BASE_URL)
 
 
 def extract_products(url: str, html: str) -> list[dict]:
     """
-    Use Claude to extract structured product data from raw HTML.
+    Use Kimi to extract structured product data from raw HTML.
     Returns a list of product dicts.
     """
     client = get_client()
     truncated_html = html[:80_000] + "\n...[truncated]" if len(html) > 80_000 else html
-
     prompt = f"PAGE URL: {url}\nPAGE HTML: {truncated_html}"
 
     try:
-        response = client.messages.create(
+        response = client.chat.completions.create(
             model=config.EXTRACTION_MODEL,
             max_tokens=8192,
             temperature=0,
-            system=EXTRACTION_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ],
         )
 
-        text = response.content[0].text
+        text = response.choices[0].message.content or ""
         parsed = _parse_json(text)
 
         if not isinstance(parsed, list):

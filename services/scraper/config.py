@@ -12,14 +12,16 @@ class Config:
     SUPABASE_SERVICE_ROLE_KEY: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
     DATABASE_URL: str = os.environ.get("DATABASE_URL", "")
 
-    # Anthropic
-    ANTHROPIC_API_KEY: str = os.environ.get("ANTHROPIC_API_KEY", "")
+    # Kimi API (Moonshot AI — OpenAI-compatible)
+    KIMI_API_KEY: str = os.environ.get("KIMI_API_KEY", "")
+    KIMI_BASE_URL: str = os.environ.get("KIMI_BASE_URL", "https://api.moonshot.cn/v1")
 
-    # Claude models
-    EXTRACTION_MODEL: str = "claude-haiku-4-5"
-    CLASSIFICATION_MODEL: str = "claude-haiku-4-5"
-    DEDUPLICATION_MODEL: str = "claude-haiku-4-5"
-    ARTICLE_MODEL: str = "claude-opus-4-5"
+    # Model IDs — verify exact names in your Kimi API dashboard
+    # Common values: "kimi-k2", "moonshot-v1-128k", "kimi-latest"
+    EXTRACTION_MODEL: str = os.environ.get("KIMI_MODEL", "kimi-k2")
+    CLASSIFICATION_MODEL: str = os.environ.get("KIMI_MODEL", "kimi-k2")
+    DEDUPLICATION_MODEL: str = os.environ.get("KIMI_MODEL", "kimi-k2")
+    ARTICLE_MODEL: str = os.environ.get("KIMI_MODEL", "kimi-k2")
 
     # Discord
     DISCORD_WEBHOOK_URL: str = os.environ.get("DISCORD_WEBHOOK_URL", "")
@@ -63,7 +65,7 @@ class Config:
         required = {
             "SUPABASE_URL": cls.SUPABASE_URL,
             "SUPABASE_SERVICE_ROLE_KEY": cls.SUPABASE_SERVICE_ROLE_KEY,
-            "ANTHROPIC_API_KEY": cls.ANTHROPIC_API_KEY,
+            "KIMI_API_KEY": cls.KIMI_API_KEY,
         }
         missing = [k for k, v in required.items() if not v]
         if missing:

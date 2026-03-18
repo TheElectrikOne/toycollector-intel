@@ -1,23 +1,24 @@
-import Anthropic from '@anthropic-ai/sdk'
+import OpenAI from 'openai'
 
-let _client: Anthropic | null = null
+let _client: OpenAI | null = null
 
-export function getAnthropicClient(): Anthropic {
+export function getAIClient(): OpenAI {
   if (!_client) {
-    if (!process.env.ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY environment variable is not set')
+    if (!process.env.KIMI_API_KEY) {
+      throw new Error('KIMI_API_KEY environment variable is not set')
     }
-    _client = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
+    _client = new OpenAI({
+      apiKey: process.env.KIMI_API_KEY,
+      baseURL: 'https://api.moonshot.cn/v1',
     })
   }
   return _client
 }
 
-export const MODEL = 'claude-opus-4-5'
-export const FAST_MODEL = 'claude-haiku-4-5'
-
-export type AnthropicMessage = Anthropic.Messages.Message
+// Check your Kimi API dashboard for the exact model ID string.
+// Common values: "kimi-k2", "moonshot-v1-128k", "kimi-latest"
+export const MODEL = process.env.KIMI_MODEL || 'kimi-k2'
+export const FAST_MODEL = process.env.KIMI_FAST_MODEL || 'kimi-k2'
 
 export async function callClaude(
   prompt: string,
@@ -28,7 +29,7 @@ export async function callClaude(
     systemPrompt?: string
   } = {}
 ): Promise<string> {
-  const client = getAnthropicClient()
+  const client = getAIClient()
   const {
     model = MODEL,
     maxTokens = 4096,
@@ -36,24 +37,27 @@ export async function callClaude(
     systemPrompt,
   } = options
 
-  const messages: Anthropic.Messages.MessageParam[] = [
-    { role: 'user', content: prompt },
-  ]
+  const messages: OpenAI.Chat.ChatCompletionMessageParam[] = []
 
-  const response = await client.messages.create({
+  if (systemPrompt) {
+    messages.push({ role: 'system', content: systemPrompt })
+  }
+
+  messages.push({ role: 'user', content: prompt })
+
+  const response = await client.chat.completions.create({
     model,
     max_tokens: maxTokens,
     temperature,
-    ...(systemPrompt ? { system: systemPrompt } : {}),
     messages,
   })
 
-  const content = response.content[0]
-  if (content.type !== 'text') {
-    throw new Error('Unexpected response type from Claude')
+  const content = response.choices[0]?.message?.content
+  if (!content) {
+    throw new Error('Empty response from Kimi API')
   }
 
-  return content.text
+  return content
 }
 
 export function parseJSONFromClaude<T>(text: string): T {
@@ -66,6 +70,6 @@ export function parseJSONFromClaude<T>(text: string): T {
   try {
     return JSON.parse(stripped) as T
   } catch (err) {
-    throw new Error(`Failed to parse Claude JSON response: ${err}\n\nRaw text:\n${text}`)
+    throw new Error(`Failed to parse AI JSON response: ${err}\n\nRaw text:\n${text}`)
   }
 }

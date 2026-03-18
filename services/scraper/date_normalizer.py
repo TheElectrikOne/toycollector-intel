@@ -1,8 +1,8 @@
-"""Claude API date normalization for toy release dates."""
+"""Kimi API date normalization for toy release dates."""
 
 import json
 from datetime import date
-import anthropic
+from openai import OpenAI
 from config import config
 from loguru import logger
 from extractor import _parse_json
@@ -33,13 +33,13 @@ Return a JSON array of normalized date objects."""
 
 def normalize_dates(date_strings: list[str], trust_level: int) -> list[dict]:
     """
-    Use Claude to normalize a list of raw date strings.
+    Use Kimi to normalize a list of raw date strings.
     Returns list of normalized date dicts.
     """
     if not date_strings:
         return []
 
-    client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+    client = OpenAI(api_key=config.KIMI_API_KEY, base_url=config.KIMI_BASE_URL)
     current_date = date.today().strftime("%Y-%m-%d")
 
     prompt = f"""INPUT DATE STRINGS: {json.dumps(date_strings)}
@@ -47,15 +47,17 @@ CURRENT DATE: {current_date}
 SOURCE TRUST LEVEL: {trust_level}"""
 
     try:
-        response = client.messages.create(
+        response = client.chat.completions.create(
             model=config.CLASSIFICATION_MODEL,
             max_tokens=2048,
             temperature=0,
-            system=DATE_NORMALIZATION_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "system", "content": DATE_NORMALIZATION_SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ],
         )
 
-        text = response.content[0].text
+        text = response.choices[0].message.content or ""
         parsed = _parse_json(text)
 
         if not isinstance(parsed, list):
