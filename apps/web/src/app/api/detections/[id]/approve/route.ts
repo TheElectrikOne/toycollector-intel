@@ -48,7 +48,7 @@ export async function POST(
 
     // Generate article using Claude
     const article = await generateArticle(
-      product as Parameters<typeof generateArticle>[0],
+      product as unknown as Parameters<typeof generateArticle>[0],
       {
         post_type: (classification.post_type || 'reveal') as Parameters<typeof generateArticle>[1]['post_type'],
         confidence_label: (classification.confidence_label || 'unverified') as Parameters<typeof generateArticle>[1]['confidence_label'],

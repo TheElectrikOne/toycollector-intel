@@ -27,7 +27,7 @@ export function detectChange(
 export function normalizeHTMLForHashing(html: string): string {
   return html
     // Remove dynamic content that changes every load (timestamps, nonces, CSRF tokens)
-    .replace(/<!--.*?-->/gs, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/\b(nonce|csrf_token|__cf_chl_tk)=['"]\w+['"]/gi, '')
     .replace(/\d{10,13}/g, '') // Remove Unix timestamps

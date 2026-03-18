@@ -57,5 +57,5 @@ export function generateDefaultHashtags(params: {
     tags.push(alertTypeMap[params.alertType])
   }
 
-  return [...new Set(tags)] // deduplicate
+  return Array.from(new Set(tags)) // deduplicate
 }
