@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Unverified toy rumors and speculation — clearly labeled and tracked for collectors.',
 }
 
-export const revalidate = 600
+export const dynamic = 'force-dynamic'
 
 export default async function RumorWatchPage() {
   const rumors = await db.query.news_posts.findMany({

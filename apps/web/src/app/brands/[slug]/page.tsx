@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function BrandPage({ params }: PageProps) {
   const brandSearch = params.slug.replace(/-/g, '%')

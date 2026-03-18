@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Latest toy news, reveals, preorder alerts, and release date updates for collectors.',
 }
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 const POST_TYPES = [
   { value: 'all', label: 'All' },

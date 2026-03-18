@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { timeAgo, formatDateTime } from '@/lib/utils'
 import { startOfDay } from 'date-fns'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
   const today = startOfDay(new Date())

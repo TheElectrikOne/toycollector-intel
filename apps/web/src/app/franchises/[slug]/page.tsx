@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function FranchisePage({ params }: PageProps) {
   const franchiseName = slugToName(params.slug)

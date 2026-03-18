@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Browse toy news and release dates by brand — Hasbro, NECA, Good Smile, Bandai, Hot Toys, and more.',
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function BrandsPage() {
   const brandCounts = await db

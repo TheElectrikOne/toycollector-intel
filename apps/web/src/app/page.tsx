@@ -17,7 +17,7 @@ const CATEGORY_FILTERS = [
   { label: 'Pokémon', franchise: 'Pokémon' },
 ]
 
-export const revalidate = 300 // 5 minutes
+export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
   const now = new Date()

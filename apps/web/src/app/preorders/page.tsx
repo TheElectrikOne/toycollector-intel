@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Live preorder alerts for toy collectors — new listings, closing-soon alerts, and restocks.',
 }
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 const ALERT_TYPES = [
   { value: 'all', label: 'All Alerts' },

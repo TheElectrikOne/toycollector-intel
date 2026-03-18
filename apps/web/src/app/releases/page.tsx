@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: 'Upcoming toy release dates, shipping schedules, and preorder windows for collectors.',
 }
 
-export const revalidate = 600
+export const dynamic = 'force-dynamic'
 
 const STATUS_GROUPS = [
   { key: 'preorder_open', label: 'Preorder Open', statuses: ['preorder_open'] },

@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 export default async function NewsPostPage({ params }: PageProps) {
   const post = await db.query.news_posts.findFirst({

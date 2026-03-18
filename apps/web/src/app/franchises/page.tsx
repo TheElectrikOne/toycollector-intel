@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Browse toy releases by franchise — Marvel, Star Wars, Transformers, Pokémon, and more.',
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function FranchisesPage() {
   const franchiseCounts = await db

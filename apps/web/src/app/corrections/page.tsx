@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: 'ToyIntel corrections log — transparent record of all articles that have been corrected.',
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function CorrectionsPage() {
   const [corrections, correctedPosts] = await Promise.all([
