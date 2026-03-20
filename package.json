@@ -6,9 +6,7 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=apps/web",
-    "build": "npm run build --workspace=apps/web",
-    "start": "npm run start --workspace=apps/web"
+    "dev": "npm run dev --workspace=apps/web"
   },
   "devDependencies": {
     "typescript": "^5"
