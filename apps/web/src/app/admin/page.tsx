@@ -2,6 +2,7 @@ import { db } from '@/lib/db'
 import { raw_detections, news_posts, preorder_alerts, page_monitors } from '@/lib/db/schema'
 import { eq, and, gte, desc } from 'drizzle-orm'
 import { StatsPanel } from '@/components/admin/StatsPanel'
+import { RunScraperButton } from '@/components/admin/RunScraperButton'
 import Link from 'next/link'
 import { timeAgo, formatDateTime } from '@/lib/utils'
 import { startOfDay } from 'date-fns'
@@ -55,14 +56,7 @@ export default async function AdminDashboard() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-black text-zinc-100">Dashboard</h1>
         <div className="flex items-center gap-3">
-          <form action="/api/scraper/trigger" method="POST">
-            <button
-              type="submit"
-              className="text-sm px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg font-bold transition-colors"
-            >
-              Run Scraper
-            </button>
-          </form>
+          <RunScraperButton />
         </div>
       </div>
 
